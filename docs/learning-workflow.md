@@ -42,7 +42,10 @@ Useful pointers *without copying a full implementation*.
 
 ## Coding habits
 
-- Work inside WSL2 and keep the repo on the Linux filesystem for best tooling behavior.
+- Work on Windows, Linux, or macOS. On Windows, either use native PowerShell or WSL2; if using WSL2, keep the repo in the Linux filesystem for best tooling behavior.
+- Prefer cross-platform Python commands (`uv run ...`) over shell-specific scripts; check terminal commands against your chosen shell.
+- Test networking against localhost with ephemeral ports; don't assume a fixed port or rely on a public website.
+- Once CI is introduced, check the Windows, Linux, and macOS jobs before merging.
 - Add tests for each behavior, including failure cases.
 - Separate stdout (result) from stderr (errors).
 - Never skip TLS certificate verification by default.
