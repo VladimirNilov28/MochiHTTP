@@ -10,7 +10,7 @@ MochiHTTP is a friendly, human-readable HTTP client for the terminal, invoked wi
 - Project and dependency manager: **uv**.
 - Runtime dependencies: Python standard library + **Rich** for terminal presentation.
 - Protocol target for MVP: **HTTP/1.1**, implemented by us using `socket` and `ssl`.
-- Development environment: Linux / WSL2.
+- Supported development and execution platforms: Windows, Linux, and macOS; WSL2 is an optional Linux workflow on Windows.
 - Visual language: restrained, readable terminal output with soft pastel accents.
 - Learning principle: implement components in small steps; avoid supplying complete solutions in beginner issues.
 
@@ -144,7 +144,26 @@ Reference: [RFC 9112 — HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112.html),
 
 References: [Python socket](https://docs.python.org/3/library/socket.html), [Python ssl](https://docs.python.org/3/library/ssl.html).
 
-## 8. Errors and CLI behavior
+## 8. Cross-platform support (ADR-009)
+
+**Goal:** the same `mochi` CLI and Python client core must work natively on Windows, Linux, and macOS. WSL2 is a supported development option, not a requirement. Use Python's portable APIs first; add OS-specific handling only for verified differences.
+
+- Keep protocol parsing, request serialization, URL models, and presentation independent of the operating system.
+- Use `socket` for DNS/TCP and `ssl` for HTTPS; do not import Windows-specific Winsock interfaces or Linux-only `epoll` directly in MVP code.
+- The MVP uses synchronous blocking sockets. `asyncio`, `epoll`, `kqueue`, and IOCP are **not** part of the MVP; a future async feature needs its own design decision.
+- Use `pathlib` for paths and portable file handling; avoid shell-specific assumptions in application code and tests.
+- Handle ordinary socket/TLS/timeout exceptions consistently. OS error codes and wording may differ; avoid assertions on exact platform-specific error messages.
+- Preserve secure TLS verification defaults on every platform. System trust stores and certificate availability may differ; tests must not rely on public internet endpoints or a particular machine's trusted CAs.
+- Avoid relying on Unix-only signals, `fork`, `SO_REUSEPORT`, or other optional OS facilities in core client behavior.
+- Network integration tests should bind to loopback using an ephemeral port and clean up all sockets. Do not assume port 8080 is available.
+- Cross-platform CI target: GitHub Actions matrix with `ubuntu-latest`, `windows-latest`, and `macos-latest`, using the project's supported Python version and uv. Run unit, local integration and CLI tests plus Ruff on each runner. CI setup will be implemented in a roadmap task; it does not exist yet.
+- Platform-specific deviations require a documented reason, an isolated implementation, and tests where feasible. Linux may be the primary deployment target, but native Windows and macOS remain supported.
+
+**Acceptance target:** `uv sync`, `uv run mochi --help`, `uv run pytest`, and `uv run ruff check .` work on each supported OS once their corresponding setup milestones have been completed.
+
+References: [Python socket](https://docs.python.org/3/library/socket.html), [Python ssl](https://docs.python.org/3/library/ssl.html), [Python pathlib](https://docs.python.org/3/library/pathlib.html), [GitHub Actions runner images](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
+
+## 9. Errors and CLI behavior
 
 Proposed families:
 - `RequestError`: invalid user input, URL or arguments.
@@ -158,7 +177,7 @@ A valid HTTP 404 or 500 is still a `Response`, not a protocol error. A later `--
 
 Errors go to stderr; ordinary result data goes to stdout. Avoid ANSI sequences when stdout is not a TTY or when `--no-color` is selected. `--output` should save unmodified response bytes, not highlighted text.
 
-## 9. Presentation and CLI design
+## 10. Presentation and CLI design
 
 - Friendly pastel accents, restrained terminal layout, clear status and optional timing.
 - Rich only in `presentation/` or the terminal-facing CLI; never in the protocol/transport.
@@ -166,7 +185,7 @@ Errors go to stderr; ordinary result data goes to stdout. Avoid ANSI sequences w
 - JSON prettification is optional and must not corrupt binary output.
 - Exit status and pipe behavior should be deterministic.
 
-## 10. Testing approach
+## 11. Testing approach
 
 - Unit tests: URL, headers, serializer, parser, framing and error mapping.
 - Test responses split into many arbitrarily sized chunks; deliberately malformed responses.
@@ -177,11 +196,11 @@ Errors go to stderr; ordinary result data goes to stdout. Avoid ANSI sequences w
 
 `pytest` and `ruff` will be **development-only** dependencies managed by uv; this does not change the minimal runtime dependency policy.
 
-## 11. Explicit non-goals for MVP
+## 12. Explicit non-goals for MVP
 
 HTTP/2, HTTP/3, proxy support, HTTP connection pooling, WebSockets, HTTP pipelining, plugin systems, TUI, asynchronous requests, and a dependency-injection framework.
 
-## 12. Architecture decision record
+## 13. Architecture decision record
 
 | ID | Decision | Why |
 | --- | --- | --- |
@@ -193,5 +212,6 @@ HTTP/2, HTTP/3, proxy support, HTTP connection pooling, WebSockets, HTTP pipelin
 | ADR-006 | Bytes-first | Binary correctness |
 | ADR-007 | Secure defaults and strict parser | Avoid unsafe protocol ambiguity |
 | ADR-008 | Subtle pastel terminal theme | Recognizable but usable |
+| ADR-009 | Native Windows, Linux and macOS support | Portable Python APIs, OS-independent HTTP core, three-OS CI |
 
 See [roadmap](roadmap.md) for work order and [learning workflow](learning-workflow.md) for how to tackle issues.
