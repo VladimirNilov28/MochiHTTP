@@ -8,12 +8,13 @@ MochiHTTP is a learning-first, open-source HTTP client written in Python. The te
 
 ## Project decisions
 
-- Python 3.13+ on Linux / WSL2
+- Python 3.13+ on Windows, Linux, and macOS (WSL2 supported)
 - **uv** for project, environment and dependency management
 - Own **HTTP/1.1** implementation using Python `socket` and `ssl`
 - Python standard library + **Rich** as runtime dependencies
 - Simple command-line interface and restrained pastel output
 - A reusable Python API planned after the CLI MVP
+- Cross-platform behavior validated by automated tests on Windows, Linux, and macOS (CI planned)
 
 ## Documentation
 
