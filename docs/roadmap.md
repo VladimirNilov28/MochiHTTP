@@ -18,7 +18,7 @@ Each Issue should explain *why*, *what*, a checklist, observable success criteri
 - [ ] **02 — Add the `mochi` CLI entry point** (help and version; no networking).
 - [ ] **03 — Add pytest and Ruff** (dev dependencies; simple automated checks).
 
-**Milestone:** `uv run mochi --help` works from WSL2; `uv run pytest` and `uv run ruff check .` run.
+**Milestone:** `uv run mochi --help`, `uv run pytest`, and `uv run ruff check .` work on the developer's chosen OS (Windows, Linux, or macOS). WSL2 is optional.
 
 ## Phase 1 — Minimal HTTP over TCP
 
@@ -46,8 +46,16 @@ Each Issue should explain *why*, *what*, a checklist, observable success criteri
 - [ ] Cookie/session behavior.
 - [ ] Save raw body to file; safe binary and piped output.
 - [ ] Compression and streaming.
-- [ ] Continuous integration and packaging/release documentation.
+- [ ] **Cross-platform CI:** add a GitHub Actions matrix for Windows, Linux and macOS; run uv setup, pytest, Ruff and local client integration tests on every OS. Document any genuine platform-specific behavior.
+- [ ] Packaging/release documentation.
 - [ ] Public Python `Client` API.
+
+## Platform support throughout the roadmap
+
+- Develop natively on Windows, Linux or macOS; on Windows, WSL2 is an optional alternative.
+- Keep the first synchronous socket/ssl implementation portable. Do not add OS-specific backends or async event loops just for portability.
+- Prefer loopback tests with ephemeral ports and no external network dependencies.
+- Manually sanity-check platforms where available during early phases. The CI matrix becomes required for release readiness in Phase 3; adding it earlier is welcome once tests exist.
 
 ## Future, not MVP
 
