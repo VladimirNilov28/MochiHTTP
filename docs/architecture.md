@@ -17,14 +17,15 @@ MochiHTTP is a friendly, human-readable HTTP client for the terminal, invoked wi
 ### Initial user experience (illustrative, not implemented)
 
 ```console
-mochi https://example.com
-mochi GET https://example.com
-mochi POST https://example.com/api name=Mochi
-mochi GET https://example.com Authorization:"Bearer TOKEN"
-mochi --verbose GET https://example.com
+mochi get https://example.com
+mochi post https://example.com/api --json '{"name":"Mochi"}'
+mochi auth
+mochi list
+mochi use dot-com-retail
+mochi get /products
 ```
 
-For the first milestones, support explicit `GET URL` and simple arguments before adopting shorthand `name=value` and `Header:value` conventions. Do not let CLI sugar complicate the network engine.
+The CLI uses **explicit lowercase subcommands**. No implicit GET and no HTTPie-style `mochi GET URL`. The `auth` command will be an interactive credential setup workflow; HTTP commands stay non-interactive. Future active profiles can provide credentials and a base URL. See [CLI design (ADR-010)](cli-design.md) for syntax, security and implementation phases.
 
 ## 2. Architectural style
 
@@ -63,6 +64,9 @@ src/mochi/
   cli/
     main.py
     parser.py
+    spec.py
+    definitions.py
+    dispatch.py
   core/
     models.py
     headers.py
@@ -107,7 +111,7 @@ For v0.1 a buffered `Response.body` is acceptable with a strict maximum body siz
 
 ## 5. Request lifecycle
 
-1. CLI parses options, method, URL and user-supplied fields.
+1. Declarative CLI definitions generate an argparse subcommand parser; dispatch resolves the selected HTTP handler and validates URL, body and headers.
 2. Request builder creates a validated `Request`.
 3. Client chooses TCP or TLS transport and connects to the server.
 4. HTTP serializer emits valid HTTP/1.1 bytes.
@@ -213,5 +217,6 @@ HTTP/2, HTTP/3, proxy support, HTTP connection pooling, WebSockets, HTTP pipelin
 | ADR-007 | Secure defaults and strict parser | Avoid unsafe protocol ambiguity |
 | ADR-008 | Subtle pastel terminal theme | Recognizable but usable |
 | ADR-009 | Native Windows, Linux and macOS support | Portable Python APIs, OS-independent HTTP core, three-OS CI |
+| ADR-010 | Declarative, command-driven CLI | Explicit lowercase commands; one source for parsing/help/docs; profile workflows separated from HTTP engine |
 
-See [roadmap](roadmap.md) for work order and [learning workflow](learning-workflow.md) for how to tackle issues.
+See [CLI design](cli-design.md) for command/schema/profile details and [roadmap](roadmap.md) for work order and [learning workflow](learning-workflow.md) for how to tackle issues.
