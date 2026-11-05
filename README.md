@@ -19,6 +19,7 @@ MochiHTTP is a learning-first, open-source HTTP client written in Python. The te
 ## Documentation
 
 - [Architecture specification](docs/architecture.md) — design, module boundaries, protocol and safety rules
+- [Command-driven CLI design](docs/cli-design.md) — explicit commands, declarative parser, auth/profile workflows
 - [Roadmap](docs/roadmap.md) — incremental learning and implementation plan
 - [Learning workflow](docs/learning-workflow.md) — how to work through the issues
 
