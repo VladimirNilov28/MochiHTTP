@@ -20,6 +20,14 @@ Each Issue should explain *why*, *what*, a checklist, observable success criteri
 
 **Milestone:** `uv run mochi --help`, `uv run pytest`, and `uv run ruff check .` work on the developer's chosen OS (Windows, Linux, or macOS). WSL2 is optional.
 
+## Phase 0.5 — CLI command foundation (new architecture)
+
+- [ ] **07 — Define minimal CLI spec models** (Command / Argument / ParserSpec).
+- [ ] **08 — Generate argparse subcommands and dispatch** (help, get, errors; no network).
+- [ ] **09 — Generate Markdown command docs from the same spec** (no duplicated help text).
+
+These issue numbers are *labels for future planning*, not existing issue IDs. Follow the linked GitHub issues once created. Parser foundation can be developed alongside isolated HTTP units; HTTP end-to-end wiring waits for the network client.
+
 ## Phase 1 — Minimal HTTP over TCP
 
 - [ ] **04 — Parse and validate an HTTP URL**.
@@ -27,7 +35,7 @@ Each Issue should explain *why*, *what*, a checklist, observable success criteri
 - [ ] **06 — Connect to a local server with TCP sockets and read bytes**.
 - [ ] **07 — Parse status line and headers**.
 - [ ] **08 — Read the response body safely** (Content-Length, chunked, no-body and EOF framing).
-- [ ] **09 — Join components into a usable `mochi GET URL` command**.
+- [ ] **09 — Join components into a usable `mochi get URL` command**.
 
 **Milestone:** a simple local HTTP GET works end-to-end with tests, without `requests` or `httpx`.
 
@@ -35,10 +43,19 @@ Each Issue should explain *why*, *what*, a checklist, observable success criteri
 
 - [ ] **10 — Add TLS with certificate and hostname verification**.
 - [ ] **11 — Pretty-print response data using Rich**.
-- [ ] **12 — Add request methods, headers, query parameters and JSON bodies**.
+- [ ] **12 — Add explicit lowercase HTTP subcommands, repeatable headers, JSON and file bodies** (\`--json\` versus \`--body\`).
 - [ ] **13 — Handle timeouts, limits and clear error messages**.
 
 **Milestone:** a practical and reasonably robust HTTPS client with terminal-friendly output.
+
+## Phase 2.5 — Local profiles and interactive authentication
+
+- [ ] Define profile metadata and active profile selection, including optional base URL.
+- [ ] Securely store bearer tokens (OS credential storage subject to dependency decision); never print secrets.
+- [ ] Implement interactive \`mochi auth\`, non-secret \`mochi list\`, and \`mochi use NAME\`.
+- [ ] Apply profile settings to HTTP requests; make CLI request commands non-interactive.
+
+See [CLI design (ADR-010)](cli-design.md) for syntax and scope.
 
 ## Phase 3 — Polish
 
