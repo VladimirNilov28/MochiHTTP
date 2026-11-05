@@ -22,11 +22,11 @@ Each Issue should explain *why*, *what*, a checklist, observable success criteri
 
 ## Phase 0.5 — CLI command foundation (new architecture)
 
-- [ ] **07 — Define minimal CLI spec models** (Command / Argument / ParserSpec).
-- [ ] **08 — Generate argparse subcommands and dispatch** (help, get, errors; no network).
-- [ ] **09 — Generate Markdown command docs from the same spec** (no duplicated help text).
+- [ ] [#7 — Define minimal CLI spec models](https://github.com/VladimirNilov28/mochi-http/issues/7) (Command / Argument / ParserSpec).
+- [ ] [#8 — Generate argparse subcommands and dispatch](https://github.com/VladimirNilov28/mochi-http/issues/8) (help, get, errors; no network).
+- [ ] [#9 — Generate Markdown command docs from the same spec](https://github.com/VladimirNilov28/mochi-http/issues/9) (no duplicated help text).
 
-These issue numbers are *labels for future planning*, not existing issue IDs. Follow the linked GitHub issues once created. Parser foundation can be developed alongside isolated HTTP units; HTTP end-to-end wiring waits for the network client.
+These link to GitHub issue numbers. Later HTTP/profile work is tracked in issues [#10](https://github.com/VladimirNilov28/mochi-http/issues/10), [#11](https://github.com/VladimirNilov28/mochi-http/issues/11) and [#12](https://github.com/VladimirNilov28/mochi-http/issues/12). Parser foundation can be developed alongside isolated HTTP units; HTTP end-to-end wiring waits for the network client.
 
 ## Phase 1 — Minimal HTTP over TCP
 
@@ -43,16 +43,15 @@ These issue numbers are *labels for future planning*, not existing issue IDs. Fo
 
 - [ ] **10 — Add TLS with certificate and hostname verification**.
 - [ ] **11 — Pretty-print response data using Rich**.
-- [ ] **12 — Add explicit lowercase HTTP subcommands, repeatable headers, JSON and file bodies** (\`--json\` versus \`--body\`).
+- [ ] [#10 — Add explicit lowercase HTTP subcommands, repeatable headers, JSON and file bodies](https://github.com/VladimirNilov28/mochi-http/issues/10) (`--json` versus `--body`).
 - [ ] **13 — Handle timeouts, limits and clear error messages**.
 
 **Milestone:** a practical and reasonably robust HTTPS client with terminal-friendly output.
 
 ## Phase 2.5 — Local profiles and interactive authentication
 
-- [ ] Define profile metadata and active profile selection, including optional base URL.
-- [ ] Securely store bearer tokens (OS credential storage subject to dependency decision); never print secrets.
-- [ ] Implement interactive \`mochi auth\`, non-secret \`mochi list\`, and \`mochi use NAME\`.
+- [ ] [#11 — Define profile metadata and active profile selection](https://github.com/VladimirNilov28/mochi-http/issues/11), including optional base URL.
+- [ ] [#12 — Implement secure bearer auth and profile commands](https://github.com/VladimirNilov28/mochi-http/issues/12): interactive `mochi auth`, non-secret `mochi list`, and `mochi use NAME`.
 - [ ] Apply profile settings to HTTP requests; make CLI request commands non-interactive.
 
 See [CLI design (ADR-010)](cli-design.md) for syntax and scope.
